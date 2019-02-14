@@ -6,10 +6,8 @@ var output = document.getElementById('output');
 var mainOutput = document.getElementById('output-main');
 var result = document.getElementById('result');
 var conditionbox = document.getElementById('condition-box');
-var x = 0;
-var y = 0;
+var params = {x: 0, y: 0, gameOver: true}
 var roundWinCondition;
-var gameOver = true;
 
 function computerPlay() {
   var computerMind = Math.floor(Math.random() * 3 + 1);
@@ -58,19 +56,19 @@ function game(playerMove) {
       mainOutput.innerHTML = tie(playerMove, computerMove);
     }
   }
-  resultCounter(x, y);
-  endGame(x, y);
+  resultCounter(params.x, params.y);
+  endGame(params.x, params.y);
 }
 function win(playerMove, computerMove) {
   var bigplayerMove = playerMove.toUpperCase();
   var bigcomputerMove = computerMove.toUpperCase();
-  x++;
+  params.x++;
   return 'You WON, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
 function lose(playerMove, computerMove) {
   var bigplayerMove = playerMove.toUpperCase();
   var bigcomputerMove = computerMove.toUpperCase();
-  y++;
+  params.y++;
   return 'You LOST, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
 function tie(playerMove, computerMove) {
@@ -96,12 +94,12 @@ function endGame(yourScore, computerScore) {
 }
 function gameEnder() {
   mainOutput.innerHTML = 'Your game is over, please press the new game button.';
-  gameOver = true;
+  params.gameOver = true;
 }
 
 for(i = 0; i < playButtons.length; i++){
   playButtons[i].addEventListener('click', function () {
-    if(gameOver == true){
+    if(params.gameOver == true){
       mainOutput.innerHTML += '<br> Please press the new game button.';
     }
     else {
@@ -123,9 +121,9 @@ button4.addEventListener('click', function () {
   }
   else {
     roundsToWin(value);
-    x = 0;
-    y = 0;
-    resultCounter(x, y);
-    gameOver = false;
+    params.x = 0;
+    params.y = 0;
+    resultCounter(params.x, params.y);
+    params.gameOver = false;
   }
 });
