@@ -83,24 +83,54 @@ function roundsToWin(condition) {
   conditionbox.innerText = 'Required to win: ' + condition + ' rounds';
 }
 function endGame(yourScore, computerScore) {
-  if (yourScore == value) {
+  if (yourScore == roundsInput) {
     output.innerText += 'YOU WON THE ENTIRE GAME!!!';
     gameEnder();
   } else
-  if (computerScore == value) {
+  if (computerScore == roundsInput) {
     output.innerText += 'YOU LOST THE ENTIRE GAME!!!';
     gameEnder();
   }
 }
 function gameEnder() {
-  mainOutput.innerHTML = 'Your game is over, please press the new game button.';
   params.gameOver = true;
+  showModal();
+}
+
+var modals = document.querySelectorAll('.modal');
+
+var showModal = function(event){
+  for(i = 0; i < modals.length; i++){
+  modals[i].classList.remove('show')
+  }
+  //var modalId = this.getAttribute("href")
+  document.querySelector('#modal-one').classList.add('show')
+  document.querySelector('#modal-overlay').classList.add('show');
+};
+
+var hideModal = function(event){
+  event.preventDefault();
+  document.querySelector('#modal-overlay').classList.remove('show');
+};
+
+var closeButtons = document.querySelectorAll('.modal .close');
+
+for(var i = 0; i < closeButtons.length; i++){
+  closeButtons[i].addEventListener('click', hideModal);
+}
+
+document.querySelector('#modal-overlay').addEventListener('click', hideModal);
+
+for(var i = 0; i < modals.length; i++){
+  modals[i].addEventListener('click', function(event){
+    event.stopPropagation();
+  });
 }
 
 for(i = 0; i < playButtons.length; i++){
   playButtons[i].addEventListener('click', function () {
     if(params.gameOver == true){
-      mainOutput.innerHTML += '<br> Please press the new game button.';
+      mainOutput.innerHTML += 'Please press the new game button. <br>';
     }
     else {
       playerMove = this.getAttribute('data-move');
@@ -114,13 +144,13 @@ button4.addEventListener('click', function () {
   output.innerText = '';
   conditionbox.innerText = '';
   result.innerText = '';
-  value = parseInt(prompt("How many rounds one needs to win the game?"));
+  roundsInput = parseInt(prompt("How many rounds one needs to win the game?"));
 
-  if(isNaN(value)) {
+  if(isNaN(roundsInput)) {
     mainOutput.innerText = 'Can\'t you count?'
   }
   else {
-    roundsToWin(value);
+    roundsToWin(roundsInput);
     params.x = 0;
     params.y = 0;
     resultCounter(params.x, params.y);

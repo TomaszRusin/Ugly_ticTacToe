@@ -11,3 +11,17 @@ body { margin: 0; }
 .play-panel .new-game-button { display: -ms-flexbox; display: flex; -ms-flex-pack: center; justify-content: center; -ms-flex-align: center; align-items: center; width: 200px; height: 30px; padding: 10px 20px; background-color: #be3918; cursor: pointer; border-radius: 21px; border: solid 3px; }
 
 .box-bg { background-color: #fff; }
+
+.overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.7); }
+
+.overlay.show { display: block; }
+
+.modal { display: none; -ms-flex-direction: column; flex-direction: column; background: #fff; width: 350px; position: absolute; top: 50%; left: 50%; transform: translate3d(-50%, -50%, 0); }
+
+.modal.show { display: -ms-flexbox; display: flex; }
+
+.modal .close { position: absolute; right: 0; top: 0; padding: 5px; color: #000; text-decoration: none; }
+
+.modal header { font-size: 20px; line-height: 30px; min-height: 30px; font-weight: bold; padding: 0 30px; }
+
+.modal .content { min-height: 30px; padding: 5px 30px; }
