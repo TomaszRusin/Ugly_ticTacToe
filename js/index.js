@@ -6,8 +6,10 @@ var output = document.getElementById('output');
 var mainOutput = document.getElementById('output-main');
 var result = document.getElementById('result');
 var conditionbox = document.getElementById('condition-box');
-var params = {x: 0, y: 0, gameOver: true}
+var modals = document.querySelectorAll('.modal');
+var params = {x: 0, y: 0, c: 1, gameOver: true, progress: []}
 var roundWinCondition;
+var final = params.progress
 
 function computerPlay() {
   var computerMind = Math.floor(Math.random() * 3 + 1);
@@ -26,49 +28,77 @@ function game(playerMove) {
   if (playerMove == 'rock') {
     if (computerMove == 'paper') {
       mainOutput.innerHTML = lose(playerMove, computerMove);
+      var defeat = true;
     } else
     if (computerMove == 'scissors') {
+      var victory = true;
       mainOutput.innerHTML = win(playerMove, computerMove);
     } else
     {
+      var tied = true;
       mainOutput.innerHTML = tie(playerMove, computerMove);
     }
   } else
   if (playerMove == 'paper') {
     if (computerMove == 'rock') {
+      var victory = true;
       mainOutput.innerHTML = win(playerMove, computerMove);
     } else
     if (computerMove == 'paper') {
+      var tied = true;
       mainOutput.innerHTML = tie(playerMove, computerMove);
     } else
     {
+      var defeat = true;
       mainOutput.innerHTML = lose(playerMove, computerMove);
     }
   } else
   if (playerMove == 'scissors') {
     if (computerMove == 'rock') {
+      var defeat = true;
       mainOutput.innerHTML = lose(playerMove, computerMove);
     } else
     if (computerMove == 'paper') {
+      var victory = true;
       mainOutput.innerHTML = win(playerMove, computerMove);
     } else
     {
       mainOutput.innerHTML = tie(playerMove, computerMove);
     }
   }
-  resultCounter(params.x, params.y);
+
+  var outcome = function() {
+    if(victory === true){
+      return 'WIN'
+    }
+    else if(defeat === true){
+      return 'LOSE'
+    }
+    else {
+      return 'TIE'
+    }
+  }
+
+  var scoreBoard = {
+    numerRundy: params.c, ruchGracza: playerMove, ruchKomputera: computerMove,wynik: outcome(), finalScore: params.x + '-' + params.y
+  }
+
+  params.progress.push(scoreBoard)
+
+  resultCounter(params.x, params.y, params.c);
   endGame(params.x, params.y);
+
 }
 function win(playerMove, computerMove) {
-  var bigplayerMove = playerMove.toUpperCase();
-  var bigcomputerMove = computerMove.toUpperCase();
-  params.x++;
-  return 'You WON, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
+  var bigPlayerMove = playerMove.toUpperCase();
+  var bigComputerMove = computerMove.toUpperCase();
+  params.x++; //your score
+  return 'You WON, you played ' + bigPlayerMove + ' computer played: ' + bigComputerMove + '<br>';
 }
 function lose(playerMove, computerMove) {
   var bigplayerMove = playerMove.toUpperCase();
   var bigcomputerMove = computerMove.toUpperCase();
-  params.y++;
+  params.y++; //computer score
   return 'You LOST, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
 function tie(playerMove, computerMove) {
@@ -76,35 +106,49 @@ function tie(playerMove, computerMove) {
   var bigcomputerMove = computerMove.toUpperCase();
   return 'TIE, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
-function resultCounter(yourScore, computerScore) {
-  result.innerText = 'You ' + yourScore + ' - ' + computerScore + ' Computer ';
+function resultCounter(yourScore, computerScore, roundNumber) {
+  result.innerText = 'You ' + yourScore + ' - ' + computerScore + ' Computer. Round: ' + roundNumber;
 }
 function roundsToWin(condition) {
   conditionbox.innerText = 'Required to win: ' + condition + ' rounds';
 }
 function endGame(yourScore, computerScore) {
   if (yourScore == roundsInput) {
-    output.innerText += 'YOU WON THE ENTIRE GAME!!!';
+    document.querySelector('#modal-one .content').innerText = 'YOU WON THE ENTIRE GAME!!!'; // modal-one is end game modal
     gameEnder();
   } else
   if (computerScore == roundsInput) {
-    output.innerText += 'YOU LOST THE ENTIRE GAME!!!';
+    document.querySelector('#modal-one .content').innerText = 'YOU LOST THE ENTIRE GAME!!!'; // modal-one is end game modal
     gameEnder();
+  }
+  else {
+    params.c++; //round number
   }
 }
 function gameEnder() {
-  params.gameOver = true;
+  createScoreBoard();
   showModal();
+  params.gameOver = true;
 }
 
-var modals = document.querySelectorAll('.modal');
+function createScoreBoard() {
+  for(var i = 0; i < params.progress.length; i++){  //ilość obiektów w tablicy progress
+    var tr = document.createElement('TR');
+    var obj = params.progress[i]   
+    for(var key in obj){  
+      var td = document.createElement('TD')
+      td.innerHTML = obj[key]
+      tr.appendChild(td)
+    }
+    document.getElementById('root').appendChild(tr)
+  }
+}
 
 var showModal = function(event){
-  for(i = 0; i < modals.length; i++){
+  for(var i = 0; i < modals.length; i++){
   modals[i].classList.remove('show')
   }
-  //var modalId = this.getAttribute("href")
-  document.querySelector('#modal-one').classList.add('show')
+  document.querySelector('#modal-one').classList.add('show')//STATIC
   document.querySelector('#modal-overlay').classList.add('show');
 };
 
@@ -127,7 +171,7 @@ for(var i = 0; i < modals.length; i++){
   });
 }
 
-for(i = 0; i < playButtons.length; i++){
+for(var i = 0; i < playButtons.length; i++){
   playButtons[i].addEventListener('click', function () {
     if(params.gameOver == true){
       mainOutput.innerHTML += 'Please press the new game button. <br>';
@@ -153,7 +197,16 @@ button4.addEventListener('click', function () {
     roundsToWin(roundsInput);
     params.x = 0;
     params.y = 0;
-    resultCounter(params.x, params.y);
+    params.c = 1;
+    resultCounter(params.x, params.y, params.c);
     params.gameOver = false;
   }
 });
+
+
+// XD
+
+// for(b = 0; b < Object.keys(params.progress[a]).length; b++){  // długość obiektów w tablicy progress
+//   var td = document.createElement('TD');
+
+// } 
