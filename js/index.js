@@ -9,7 +9,6 @@ var conditionbox = document.getElementById('condition-box');
 var modals = document.querySelectorAll('.modal');
 var params = {x: 0, y: 0, c: 1, gameOver: true, progress: []}
 var roundWinCondition;
-var final = params.progress
 
 function computerPlay() {
   var computerMind = Math.floor(Math.random() * 3 + 1);
@@ -134,6 +133,7 @@ function gameEnder() {
 function createScoreBoard() {
   for(var i = 0; i < params.progress.length; i++){  //ilość obiektów w tablicy progress
     var tr = document.createElement('TR');
+    tr.classList.add('expendable')
     var obj = params.progress[i]   
     for(var key in obj){  
       var td = document.createElement('TD')
@@ -156,6 +156,15 @@ var hideModal = function(event){
   event.preventDefault();
   document.querySelector('#modal-overlay').classList.remove('show');
 };
+
+var deleteTable = function(){
+  var root = document.getElementById('root');
+  var expendable = document.querySelectorAll('.expendable');
+  
+  for(var i = 0; i < expendable.length; i++){
+    root.removeChild(expendable[i]);
+  }
+}
 
 var closeButtons = document.querySelectorAll('.modal .close');
 
@@ -188,6 +197,7 @@ button4.addEventListener('click', function () {
   output.innerText = '';
   conditionbox.innerText = '';
   result.innerText = '';
+  deleteTable();
   roundsInput = parseInt(prompt("How many rounds one needs to win the game?"));
 
   if(isNaN(roundsInput)) {
@@ -199,14 +209,7 @@ button4.addEventListener('click', function () {
     params.y = 0;
     params.c = 1;
     resultCounter(params.x, params.y, params.c);
+    params.progress = [];
     params.gameOver = false;
   }
 });
-
-
-// XD
-
-// for(b = 0; b < Object.keys(params.progress[a]).length; b++){  // długość obiektów w tablicy progress
-//   var td = document.createElement('TD');
-
-// } 
