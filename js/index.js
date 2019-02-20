@@ -7,110 +7,79 @@ var mainOutput = document.getElementById('output-main');
 var result = document.getElementById('result');
 var conditionbox = document.getElementById('condition-box');
 var modals = document.querySelectorAll('.modal');
-var params = {x: 0, y: 0, c: 1, gameOver: true, progress: []}
+var params = {
+  yourScore: 0, 
+  computerScore: 0, 
+  roundNumber: 1, 
+  gameOver: true, 
+  progress: []
+}
+
 var roundWinCondition;
 
 function computerPlay() {
-  var computerMind = Math.floor(Math.random() * 3 + 1);
-  if (computerMind == 1) {
-    return 'rock';
-  } else
-  if (computerMind == 2) {
-    return 'paper';
-  } else
-  {
-    return 'scissors';
-  }
+  var computerMind = Math.floor(Math.random() * 3);
+  return ['rock', 'paper', 'scissors'][computerMind];
 }
+
 function game(playerMove) {
   var computerMove = computerPlay();
-  if (playerMove == 'rock') {
-    if (computerMove == 'paper') {
-      mainOutput.innerHTML = lose(playerMove, computerMove);
-      var defeat = true;
-    } else
-    if (computerMove == 'scissors') {
-      var victory = true;
-      mainOutput.innerHTML = win(playerMove, computerMove);
-    } else
-    {
-      var tied = true;
-      mainOutput.innerHTML = tie(playerMove, computerMove);
-    }
-  } else
-  if (playerMove == 'paper') {
-    if (computerMove == 'rock') {
-      var victory = true;
-      mainOutput.innerHTML = win(playerMove, computerMove);
-    } else
-    if (computerMove == 'paper') {
-      var tied = true;
-      mainOutput.innerHTML = tie(playerMove, computerMove);
-    } else
-    {
-      var defeat = true;
-      mainOutput.innerHTML = lose(playerMove, computerMove);
-    }
-  } else
-  if (playerMove == 'scissors') {
-    if (computerMove == 'rock') {
-      var defeat = true;
-      mainOutput.innerHTML = lose(playerMove, computerMove);
-    } else
-    if (computerMove == 'paper') {
-      var victory = true;
-      mainOutput.innerHTML = win(playerMove, computerMove);
-    } else
-    {
-      mainOutput.innerHTML = tie(playerMove, computerMove);
-    }
+  if (playerMove === computerMove){
+    mainOutput.innerHTML = tie(playerMove, computerMove);
+    var outcome = 'TIE'
+  }
+  else if((playerMove == 'rock' && computerMove == 'scissors') || (playerMove == 'paper' && computerMove == 'rock') || (playerMove == 'scissors' && computerMove == 'paper')){
+    mainOutput.innerHTML = win(playerMove, computerMove);
+    var outcome = 'WIN'
+  }
+  else {
+    mainOutput.innerHTML = lose(playerMove, computerMove);
+    var outcome = 'LOSE'
   }
 
-  var outcome = function() {
-    if(victory === true){
-      return 'WIN'
-    }
-    else if(defeat === true){
-      return 'LOSE'
-    }
-    else {
-      return 'TIE'
-    }
-  }
 
   var scoreBoard = {
-    numerRundy: params.c, ruchGracza: playerMove, ruchKomputera: computerMove,wynik: outcome(), finalScore: params.x + '-' + params.y
+    numerRundy: params.roundNumber, 
+    ruchGracza: playerMove, 
+    ruchKomputera: computerMove,
+    wynik: outcome, 
+    finalScore: params.yourScore + '-' + params.computerScore
   }
 
   params.progress.push(scoreBoard)
 
-  resultCounter(params.x, params.y, params.c);
-  endGame(params.x, params.y);
-
+  resultCounter(params.yourScore, params.computerScore, params.roundNumber);
+  endGame(params.yourScore, params.computerScore);
 }
+
 function win(playerMove, computerMove) {
   var bigPlayerMove = playerMove.toUpperCase();
   var bigComputerMove = computerMove.toUpperCase();
-  params.x++; //your score
+  params.yourScore++; //your score
   return 'You WON, you played ' + bigPlayerMove + ' computer played: ' + bigComputerMove + '<br>';
 }
+
 function lose(playerMove, computerMove) {
   var bigplayerMove = playerMove.toUpperCase();
   var bigcomputerMove = computerMove.toUpperCase();
-  params.y++; //computer score
+  params.computerScore++; //computer score
   return 'You LOST, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
+
 function tie(playerMove, computerMove) {
   var bigplayerMove = playerMove.toUpperCase();
   var bigcomputerMove = computerMove.toUpperCase();
   return 'TIE, you played ' + bigplayerMove + ' computer played: ' + bigcomputerMove + '<br>';
 }
+
 function resultCounter(yourScore, computerScore, roundNumber) {
   result.innerText = 'You ' + yourScore + ' - ' + computerScore + ' Computer. Round: ' + roundNumber;
 }
+
 function roundsToWin(condition) {
   conditionbox.innerText = 'Required to win: ' + condition + ' rounds';
 }
+
 function endGame(yourScore, computerScore) {
   if (yourScore == roundsInput) {
     document.querySelector('#modal-one .content').innerText = 'YOU WON THE ENTIRE GAME!!!'; // modal-one is end game modal
@@ -121,9 +90,10 @@ function endGame(yourScore, computerScore) {
     gameEnder();
   }
   else {
-    params.c++; //round number
+    params.roundNumber++; //round number
   }
 }
+
 function gameEnder() {
   createScoreBoard();
   showModal();
@@ -205,10 +175,10 @@ button4.addEventListener('click', function () {
   }
   else {
     roundsToWin(roundsInput);
-    params.x = 0;
-    params.y = 0;
-    params.c = 1;
-    resultCounter(params.x, params.y, params.c);
+    params.yourScore = 0;
+    params.computerScore = 0;
+    params.roundNumber = 1;
+    resultCounter(params.yourScore, params.computerScore, params.roundNumber);
     params.progress = [];
     params.gameOver = false;
   }
