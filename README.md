@@ -1,6 +1,6 @@
 # Game
 
-Github pages: https://tomaszrusin.github.io/Game/
+Github pages: https://tomaszrusin.github.io/Ugly_ticTacToe/
 
 ## Available scripts
 
